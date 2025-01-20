@@ -1,8 +1,7 @@
-#ifndef COLOR3_H
-#define COLOR3_H
+#pragma once
+
 
 #include "vec3.h"
 using color3 = vec3;
 
 
-#endif

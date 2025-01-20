@@ -1,5 +1,4 @@
-#ifndef RAY
-#define RAY
+#pragma once
 
 #include "vec3.h"
 
@@ -25,4 +24,3 @@ public:
 };
 
 
-#endif

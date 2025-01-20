@@ -1,5 +1,5 @@
-#ifndef CAMERA
-#define CAMERA
+#pragma once
+
 #include "vec3.h"
 
 class camera {
@@ -43,4 +43,3 @@ public:
 
 
 
-#endif

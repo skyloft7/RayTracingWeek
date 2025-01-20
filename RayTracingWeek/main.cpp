@@ -6,7 +6,7 @@
 
 
 int main() {
-
+	
 
 	int imageWidth = 640;
 	int imageHeight = 480;
@@ -21,14 +21,10 @@ int main() {
 
 	vec3 cameraPos = vec3(0.0, 0.0, 0.0);
 	camera camera(2.0 * aspectRatio, 2.0, imageWidth, imageHeight, cameraPos);
-	renderer renderer;
-
-
 	
+	renderer ren;
 
-	renderer.render(camera, output);
-
-	
+	ren.render(camera, output);
 
 	
 

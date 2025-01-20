@@ -1,10 +1,10 @@
 #include "renderer.h"
 
 
-const color3 renderer::trace_ray(ray& ray, sphere& sphere) {
+color3 renderer::trace_ray(ray& ray, sphere& sphere) {
 	float aq = dot(ray.dir, ray.dir);
-	float bq = 2 * dot(ray.orig, ray.dir);
-	float cq = dot(ray.orig, ray.orig) - sphere.radius * sphere.radius;
+	float bq = 2 * dot(ray.orig - sphere.pos, ray.dir);
+	float cq = dot(ray.orig - sphere.pos, ray.orig - sphere.pos) - sphere.radius * sphere.radius;
 
 	float discriminant = bq * bq - 4 * aq * cq;
 
@@ -15,12 +15,16 @@ const color3 renderer::trace_ray(ray& ray, sphere& sphere) {
 		vec3 hit = ray.orig + t * ray.dir;
 		vec3 normal = normalize(hit - sphere.pos);
 
-		return color3(normal.x() * 255, normal.y() * 255, normal.z() * 255);
+		return color3(normal.x() * 255, normal.y() * 255, 100);
 	}
+
+	return color3(0.0, 0.0, 0.0);
 }
+
 
 void renderer::render(camera& camera, std::ofstream& output) {
 
+	
 	sphere s = { vec3(0.0, 0.0, 2.0), 0.5 };
 	
 
@@ -29,7 +33,6 @@ void renderer::render(camera& camera, std::ofstream& output) {
 		for (int i = 0; i < camera.screenWidth; i++) {
 
 			ray ray(camera.pos, camera.screenToWorld(i, j, 2));
-			ray.orig = ray.orig - s.pos;
 
 
 			color3 rayResult = trace_ray(ray, s);
@@ -40,4 +43,5 @@ void renderer::render(camera& camera, std::ofstream& output) {
 	}
 
 	output.close();
+	
 }

@@ -1,5 +1,4 @@
-#ifndef SPHERE_H
-#define SPHERE_H
+#pragma once
 #include "vec3.h"
 
 struct sphere {
@@ -8,4 +7,3 @@ struct sphere {
 };
 
 
-#endif
