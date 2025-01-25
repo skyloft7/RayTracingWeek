@@ -8,6 +8,8 @@
 #include "glm.hpp"
 #include <vector>
 #include <random>
+#include <random>
+#include "light.h"
 
 struct hitresult {
 	bool miss;
@@ -17,7 +19,7 @@ struct hitresult {
 
 class renderer {
 private:
-	hitresult trace_ray(ray& ray, std::vector<sphere> spheres, camera& camera);
+	hitresult trace_ray(ray& incidentRay, std::vector<sphere> spheres, std::vector<light> lights, camera& camera);
 	double random_number(double start, double end);
 	glm::vec3 random_vec3();
 	glm::vec3 random_vec3_on_sphere(glm::vec3 randomVec3, glm::vec3 normal);
@@ -30,7 +32,7 @@ private:
 	
 
 public:
-	renderer() : gen(rd()), dist({0.7, 0.3}) {
+	renderer() : gen(rd()), dist({0.2, 0.8}) {
 
 	}
 

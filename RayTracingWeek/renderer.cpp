@@ -1,11 +1,7 @@
 #include "renderer.h"
 #include <iostream>
-#include <random>
 
 inline glm::vec3 blend(ray& ray, glm::vec3& colorA, glm::vec3& colorB) {
-
-	glm::vec3 unitDirection = glm::normalize(ray.direction());
-
 	float a = 0.5;
 
 	return (1.0f - a) * colorA + a * colorB;
@@ -20,7 +16,7 @@ glm::vec3 renderer::random_vec3() {
 			return p / glm::length(p);
 		}
 	}
-
+	
 	return glm::vec3(0.0, 0.0, 0.0);
 }
 
@@ -38,7 +34,7 @@ double renderer::random_number(double start, double end) {
 	return start + (end - start) * r;
 }
 
-hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, camera& camera) {
+hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, std::vector<light> lights, camera& camera) {
 
 
 
@@ -64,8 +60,6 @@ hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, cam
 				glm::vec3 hit = incidentRay.orig + t * incidentRay.dir;
 				glm::vec3 normal = glm::normalize(hit - sphere.pos);
 
-				//if (glm::dot(incidentRay.direction(), normal) < 0.0) normal = -normal;
-
 
 				if (hit.z > closestZ) {
 					closestHit = &hit;
@@ -87,7 +81,7 @@ hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, cam
 
 
 	if (closestSphere != nullptr) {
-		res.color = closestSphere->color;
+		res.color = closestSphere->color;// *std::max(0.0f, glm::dot(*closestNormal, glm::vec3(0.0, -1, 0)));
 		res.miss = false;
 
 		double randomNumber = dist(gen);
@@ -96,10 +90,10 @@ hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, cam
 		
 		ray childRay(*closestHit * 1.01f, childRayDir);
 
-		hitresult childHitResult = trace_ray(childRay, spheres, camera);
+		hitresult childHitResult = trace_ray(childRay, spheres, lights, camera);
 
 		if (!childHitResult.miss) {
-			res.color = blend(childRay, closestSphere->color, childHitResult.color);
+			res.color = 0.5f * blend(childRay, res.color, childHitResult.color);
 			return res;
 		}
 
@@ -127,7 +121,9 @@ void renderer::render(camera& camera, std::ofstream& output) {
 	spheres.emplace_back<sphere>({ glm::vec3(0.0, 0.0, -1), 0.5, glm::vec3 { 0.5, 0.7, 1.0 } });
 	spheres.emplace_back<sphere>({ glm::vec3(0.3, 0.2, -0.5), 0.1, glm::vec3 { 1, 0.7, 1.0 } });
 
+	std::vector<light> lights;
 
+	lights.emplace_back<light>({glm::vec3(0.5, 0.5, -0.5)});
 	
 
 
@@ -140,7 +136,7 @@ void renderer::render(camera& camera, std::ofstream& output) {
 
 			ray ray(camera.pos, glm::normalize(camera.screenToWorld(i, j)));
 
-			hitresult rayResult = trace_ray(ray, spheres, camera);
+			hitresult rayResult = trace_ray(ray, spheres, lights, camera);
 
 
 			output << (int)(rayResult.color.r * 255) << ' ' << (int)(rayResult.color.g * 255) << ' ' << (int)(rayResult.color.b * 255) << '\n';

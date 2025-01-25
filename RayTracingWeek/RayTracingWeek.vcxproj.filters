@@ -35,5 +35,8 @@
     <ClInclude Include="renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
