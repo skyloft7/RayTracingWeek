@@ -7,9 +7,12 @@
 
 int main() {
 	
+	auto aspectRatio = (float)16.0 / 9.0;
 
-	int imageWidth = 640;
-	int imageHeight = 480;
+
+	int imageWidth = 1920;
+	int imageHeight = int(imageWidth / aspectRatio);
+	imageHeight = (imageHeight < 1) ? 1 : imageHeight;
 
 	std::ofstream output;
 	output.open("image.ppm");
@@ -17,10 +20,9 @@ int main() {
 	output << "P3\n" << imageWidth << ' ' << imageHeight << "\n255\n";
 
 
-	auto aspectRatio = (float) imageWidth / imageHeight;
 
-	vec3 cameraPos = vec3(0.0, 0.0, 0.0);
-	camera camera(2.0 * aspectRatio, 2.0, imageWidth, imageHeight, cameraPos);
+	glm::vec3 cameraPos = glm::vec3(0.0, 0.0, 0.0);
+	camera camera(2.0 * aspectRatio, 2.0, imageWidth, imageHeight, cameraPos, -1);
 	
 	renderer ren;
 

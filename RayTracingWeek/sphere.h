@@ -1,9 +1,10 @@
 #pragma once
-#include "vec3.h"
+#include "glm.hpp"
 
 struct sphere {
-	vec3 pos;
+	glm::vec3 pos;
 	float radius;
+	glm::vec3 color;
 };
 
 
