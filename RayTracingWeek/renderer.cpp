@@ -34,6 +34,14 @@ double renderer::random_number(double start, double end) {
 	return start + (end - start) * r;
 }
 
+double renderer::linear_to_gamma(double input) {
+	if (input > 0) {
+		return glm::sqrt(input);
+	}
+	
+	return 0;
+}
+
 hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, std::vector<light> lights, camera& camera) {
 
 
@@ -121,6 +129,12 @@ hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, std
 	return res;
 }
 
+double renderer::clamp(double input, double min, double max) {
+	if (input <= min) return min;
+	if (input >= max) return max;
+
+	return input;
+}
 
 
 
@@ -148,8 +162,14 @@ void renderer::render(camera& camera, std::ofstream& output) {
 
 			hitresult rayResult = trace_ray(ray, spheres, lights, camera);
 
+			float r = clamp(linear_to_gamma(rayResult.color.r), 0.0, 1.0);
+			float g = clamp(linear_to_gamma(rayResult.color.g), 0.0, 1.0);
+			float b = clamp(linear_to_gamma(rayResult.color.b), 0.0, 1.0);
 
-			output << (int)(rayResult.color.r * 255) << ' ' << (int)(rayResult.color.g * 255) << ' ' << (int)(rayResult.color.b * 255) << '\n';
+			
+
+
+			output << (int)(r * 255) << ' ' << (int)(g * 255) << ' ' << (int)(b * 255) << '\n';
 
 		}
 	}

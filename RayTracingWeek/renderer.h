@@ -21,6 +21,8 @@ class renderer {
 private:
 	hitresult trace_ray(ray& incidentRay, std::vector<sphere> spheres, std::vector<light> lights, camera& camera);
 	double random_number(double start, double end);
+	double linear_to_gamma(double input);
+	double clamp(double input, double min, double max);
 	glm::vec3 random_vec3();
 	glm::vec3 random_vec3_on_sphere(glm::vec3 randomVec3, glm::vec3 normal);
 	// Create a random device and seed a Mersenne Twister engine
