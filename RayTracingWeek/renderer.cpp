@@ -85,8 +85,18 @@ hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, std
 		res.miss = false;
 
 		double randomNumber = dist(gen);
+		glm::vec3 childRayDir;
 
-		glm::vec3 childRayDir = randomNumber == 0 ? glm::reflect(incidentRay.direction(), *closestNormal) : random_vec3_on_sphere(random_vec3(), *closestNormal);
+		if (randomNumber == 0) {
+			childRayDir = glm::reflect(incidentRay.direction(), *closestNormal);
+		}
+		else {
+
+			glm::vec3 normal = *closestNormal;
+			normal += random_vec3();
+			childRayDir = random_vec3_on_sphere(random_vec3(), normal);
+		}
+
 		
 		ray childRay(*closestHit * 1.01f, childRayDir);
 
