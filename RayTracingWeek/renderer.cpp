@@ -6,12 +6,13 @@
 #include "util.h"
 
 
-double renderer::linear_to_gamma(double input) {
-	if (input > 0) {
-		return glm::sqrt(input);
-	}
-	
-	return 0;
+glm::vec3 renderer::linear_to_gamma(glm::vec3& input) {
+
+	if (input.r > 0) input.r = sqrt(input.r);
+	if (input.g > 0) input.g = sqrt(input.g);
+	if (input.b > 0) input.b = sqrt(input.b);
+
+	return input;
 }
 
 hitresult renderer::trace_ray(ray& incidentRay, std::vector<sphere> spheres, camera& camera) {
@@ -106,13 +107,6 @@ void renderer::render(camera& camera, std::ofstream& output) {
 	
 	std::vector<sphere> spheres;
 
-	material* mat1 = new lambertian(glm::vec3(1.0, 1.0, 1.0));
-	material* mat2 = new lambertian(glm::vec3(0.7, 0.2, 0.4));
-	material* mat3 = new metal(glm::vec3(0.2, 0.3, 0.7));
-	material* mat4 = new metal(glm::vec3(0.7, 0.6, 0.4));
-	material* mat5 = new metal(glm::vec3(0.3, 0.9, 0.4));
-	material* mat6 = new lambertian(glm::vec3(0.9, 0.3, 0.2));
-
 	
 	
 
@@ -121,38 +115,44 @@ void renderer::render(camera& camera, std::ofstream& output) {
 	spheres.emplace_back<sphere>({ 
 		glm::vec3(0.0, 100.5, -1), 
 		100, 
-		mat1 
+		new lambertian(glm::vec3(1.0, 1.0, 1.0))
 	});
+	
 	spheres.emplace_back<sphere>({
-		glm::vec3(1.0, -0.5, -1),
-		0.3,
-		mat5
+		glm::vec3(0.0, 0.3, -1),
+		0.2,
+		new lambertian(glm::vec3(0.3, 0.0, 1.0))
+	});
+	
+	spheres.emplace_back<sphere>({
+		glm::vec3(1.0, -0.45, -1),
+		0.2,
+		new lambertian(glm::vec3(0.3, 0.9, 1.0))
 	});
 
-	spheres.emplace_back<sphere>({ 
-		glm::vec3(0.0, 0.15, -1), 
-		0.5, 
-		mat2
-	});
 	spheres.emplace_back<sphere>({
-		glm::vec3(-0.5, 0.2, -0.5),
-		0.1,
-		mat6
+		glm::vec3(1.0, 0.0, -1),
+		0.2,
+		new metal(glm::vec3(0.7, 0.2, 1.0))
 	});
-	spheres.emplace_back<sphere>({ 
-		glm::vec3(0.3, 0.2, -0.5), 
-		0.1, 
-		mat3
-	});
-	spheres.emplace_back<sphere>({
-		glm::vec3(-0.4, 0.2, -0.8),
-		0.1,
-		mat4
-	});
-	
-	
 
+	spheres.emplace_back<sphere>({
+		glm::vec3(1.0, 0.3, -0.7),
+		0.2,
+		new lambertian(glm::vec3(0.9, 0.2, 0.4))
+	});
+
+	spheres.emplace_back<sphere>({
+		glm::vec3(-1.0, 0.45, 0.5),
+		0.2,
+		new lambertian(glm::vec3(0.9, 0.5, 0.2))
+	});
 	
+	spheres.emplace_back<sphere>({
+		glm::vec3(-0.8, 0.45, -0.5),
+		0.1,
+		new metal(glm::vec3(0.3, 0.5, 1.0))
+	});
 
 
 	for (int j = 0; j < camera.screenHeight; j++) {
@@ -162,18 +162,45 @@ void renderer::render(camera& camera, std::ofstream& output) {
 
 		for (int i = 0; i < camera.screenWidth; i++) {
 
-			ray ray(camera.pos, glm::normalize(camera.screenToWorld(i, j)));
 
-			hitresult rayResult = trace_ray(ray, spheres, camera);
+			glm::vec3 color;
 
-			float r = clamp(linear_to_gamma(rayResult.color.r), 0.0, 1.0);
-			float g = clamp(linear_to_gamma(rayResult.color.g), 0.0, 1.0);
-			float b = clamp(linear_to_gamma(rayResult.color.b), 0.0, 1.0);
+			if (i != 0 && i != camera.screenWidth - 1 && j != 0 && j != camera.screenHeight - 1) {
+				glm::vec2 pixels[9] = {
+						glm::vec2(i, j),
+						glm::vec2(i - 1, j),
+						glm::vec2(i + 1, j),
+						glm::vec2(i, j - 1),
+						glm::vec2(i, j + 1),
+						glm::vec2(i - 1, j - 1),
+						glm::vec2(i + 1, j + 1),
+						glm::vec2(i + 1, j - 1),
+						glm::vec2(i - 1, j + 1)
+				};
 
-			
+				for (glm::vec2 pixel : pixels) {
+					ray ray(camera.pos, glm::normalize(camera.screenToWorld(pixel.x, pixel.y)));
+					hitresult rayResult = trace_ray(ray, spheres, camera);
 
+					color += rayResult.color;
+				}
 
-			output << (int)(r * 255) << ' ' << (int)(g * 255) << ' ' << (int)(b * 255) << '\n';
+				color /= 9;
+				
+
+			}
+
+			else {
+				ray ray(camera.pos, glm::normalize(camera.screenToWorld(i, j)));
+				hitresult rayResult = trace_ray(ray, spheres, camera);
+				color = rayResult.color;
+			}
+
+			color.r = clamp(color.r, 0.0, 1.0);
+			color.g = clamp(color.g, 0.0, 1.0);
+			color.b = clamp(color.b, 0.0, 1.0);
+
+			output << (int)(color.r * 255) << ' ' << (int)(color.g * 255) << ' ' << (int)(color.b * 255) << '\n';
 
 		}
 	}

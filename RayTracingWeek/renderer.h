@@ -18,7 +18,7 @@ struct hitresult {
 class renderer {
 private:
 	hitresult trace_ray(ray& incidentRay, std::vector<sphere> spheres, camera& camera);
-	double linear_to_gamma(double input);
+	glm::vec3 linear_to_gamma(glm::vec3& input);
 	double clamp(double input, double min, double max);
 	
 public:
