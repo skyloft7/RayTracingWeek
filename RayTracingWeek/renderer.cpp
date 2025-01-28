@@ -149,7 +149,7 @@ void renderer::render(camera& camera, std::ofstream& output) {
 	});
 	
 	spheres.emplace_back<sphere>({
-		glm::vec3(-0.8, 0.45, -0.5),
+		glm::vec3(-0.5, 0.45, -0.5),
 		0.1,
 		new metal(glm::vec3(0.3, 0.5, 1.0))
 	});
