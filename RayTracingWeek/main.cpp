@@ -21,8 +21,13 @@ int main() {
 
 
 
-	glm::vec3 cameraPos = glm::vec3(0.0, 0.0, 0.0);
-	camera camera(2.0 * aspectRatio, 2.0, imageWidth, imageHeight, cameraPos, -1);
+	glm::vec3 cameraPos = glm::vec3(0.0, 0.0, 1.0);
+
+	float vfov = 45;
+
+	float h = glm::tan((vfov / 2.0) * (3.14 / 180)) * 2 * 1;
+
+	camera camera(h * aspectRatio, h, imageWidth, imageHeight, cameraPos, -1);
 	
 	renderer ren;
 
