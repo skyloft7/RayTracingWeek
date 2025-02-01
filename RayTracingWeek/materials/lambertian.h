@@ -11,8 +11,6 @@ public:
 	
 	glm::vec3 color(ray& incidentRay, glm::vec3& normal, glm::vec3& childRayDir) {
 
-		//std::cout << "your mom" << std::endl;
-
 		normal += random_vec3();
 		childRayDir = random_vec3_on_sphere(random_vec3(), normal);
 

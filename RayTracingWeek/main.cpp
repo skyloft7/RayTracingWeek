@@ -6,13 +6,15 @@
 #include "scene.h"
 #include "materials/lambertian.h"
 #include "materials/metal.h"
+#include "sphere.h"
+#include "mesh.h"
 
 int main() {
 	
 	auto aspectRatio = (float)16.0 / 9.0;
 
 
-	int imageWidth = 1920;
+	int imageWidth = 640;
 	int imageHeight = int(imageWidth / aspectRatio);
 	imageHeight = (imageHeight < 1) ? 1 : imageHeight;
 
@@ -32,6 +34,8 @@ int main() {
 
 	scene scene;
 	{
+
+		
 		scene.add_entity(new sphere(
 			glm::vec3(0.0, 100.5, -1),
 			100,
@@ -68,12 +72,15 @@ int main() {
 			0.2,
 			new lambertian(glm::vec3(0.9, 0.5, 0.2))
 		));
+		
 
-		scene.add_entity(new sphere(
-			glm::vec3(-0.5, 0.415, -0.5),
-			0.1,
+		scene.add_entity(new mesh(
+			glm::vec3(-0.2, 0, 0),
+			std::string("stanford-bunny.obj"),
 			new metal(glm::vec3(0.3, 0.5, 1.0))
 		));
+
+
 		
 
 	}

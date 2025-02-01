@@ -8,6 +8,7 @@
 #include "entity.h"
 #include "hitresult.h"
 
+
 glm::vec3 renderer::linear_to_gamma(glm::vec3& input) {
 
 	if (input.r > 0) input.r = sqrt(input.r);
@@ -75,7 +76,7 @@ rayresult renderer::trace_ray(ray& incidentRay, scene& scene, camera& camera) {
 	
 
 	res.miss = true;
-	res.color = glm::vec3{ 0.0, 0.0, 0.0 };
+	res.color = glm::vec3{ 1.0, 0.0, 0.0 };
 
 	return res;
 }
@@ -90,17 +91,21 @@ double renderer::clamp(double input, double min, double max) {
 
 
 void renderer::render(camera& camera, scene& scene, std::ofstream& output) {
+
 	
 	
 	for (int j = 0; j < camera.screenHeight; j++) {
 		int scanlinesRemaining = camera.screenHeight - j;
 
+		std::cout << "Scanlines Remaining: " << scanlinesRemaining << std::endl;
 
 
 		for (int i = 0; i < camera.screenWidth; i++) {
 
 
 			glm::vec3 color;
+
+#ifdef MULTISAMPLE_ON 
 
 			if (i != 0 && i != camera.screenWidth - 1 && j != 0 && j != camera.screenHeight - 1) {
 				glm::vec2 pixels[9] = {
@@ -132,6 +137,11 @@ void renderer::render(camera& camera, scene& scene, std::ofstream& output) {
 				rayresult rayResult = trace_ray(ray, scene, camera);
 				color = rayResult.color;
 			}
+#else 
+			ray ray(camera.pos, glm::normalize(camera.screenToWorld(i, j)));
+			rayresult rayResult = trace_ray(ray, scene, camera);
+			color = rayResult.color;
+#endif
 
 			color.r = clamp(color.r, 0.0, 1.0);
 			color.g = clamp(color.g, 0.0, 1.0);

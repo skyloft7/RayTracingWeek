@@ -12,8 +12,6 @@ public:
 
 	glm::vec3 color(ray& incidentRay, glm::vec3& normal, glm::vec3& childRayDir) {
 
-		//std::cout << "Foo bar" << std::endl;
-
 		childRayDir = glm::reflect(incidentRay.direction(), normal);
 
 		return albedo;
