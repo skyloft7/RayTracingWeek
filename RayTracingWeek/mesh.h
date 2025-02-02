@@ -60,6 +60,8 @@ public:
 			auto& attrib = reader.GetAttrib();
 			auto& shapes = reader.GetShapes();
 
+	
+
 			// Loop over shapes
 			for (size_t s = 0; s < shapes.size(); s++) {
 				// Loop over faces(polygon)
@@ -75,8 +77,8 @@ public:
 						tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
 						tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
 
-						vertices.emplace_back((glm::vec3(vx, vy, vz) * 5.0f) + glm::vec3(0, -0.5, 0));
-						//vertices.emplace_back((glm::vec3(vx, vy, vz) * 0.03f));
+						//vertices.emplace_back((glm::vec3(vx, -vy, vz) * 5.0f) + glm::vec3(0, 1.0, 0));
+						vertices.emplace_back((glm::vec3(vx, -vy, vz) * 0.01f * 0.6f));
 						//vertices.emplace_back((glm::vec3(vx, vy, vz) * 1000.0f) + glm::vec3(10, 0, 0));
 
 					}

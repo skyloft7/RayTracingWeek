@@ -8,7 +8,6 @@
 #include "entity.h"
 #include "hitresult.h"
 
-
 glm::vec3 renderer::linear_to_gamma(glm::vec3& input) {
 
 	if (input.r > 0) input.r = sqrt(input.r);

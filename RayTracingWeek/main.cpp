@@ -14,7 +14,7 @@ int main() {
 	auto aspectRatio = (float)16.0 / 9.0;
 
 
-	int imageWidth = 640;
+	int imageWidth = 426 / 8;
 	int imageHeight = int(imageWidth / aspectRatio);
 	imageHeight = (imageHeight < 1) ? 1 : imageHeight;
 
@@ -76,7 +76,7 @@ int main() {
 
 		scene.add_entity(new mesh(
 			glm::vec3(-0.2, 0, 0),
-			std::string("stanford-bunny.obj"),
+			std::string("xyzrgb_dragon.obj"),
 			new metal(glm::vec3(0.3, 0.5, 1.0))
 		));
 
