@@ -77,9 +77,24 @@ public:
 						tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
 						tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
 
-						//vertices.emplace_back((glm::vec3(vx, -vy, vz) * 5.0f) + glm::vec3(0, 1.0, 0));
-						vertices.emplace_back((glm::vec3(vx, -vy, vz) * 0.01f * 0.6f));
-						//vertices.emplace_back((glm::vec3(vx, vy, vz) * 1000.0f) + glm::vec3(10, 0, 0));
+						//Dont multiply y by -1! Or the normals get all messed up
+
+						//viking_room.obj
+						//vertices.emplace_back((glm::vec3(vx, vy, vz) * 0.3f) + glm::vec3(0.0, 0.0, 0.0));
+
+						//steve.obj
+						//vertices.emplace_back((glm::vec3(vx, vy, vz) * 0.03f) + glm::vec3(0.0, 0.0, 0.0));
+
+						//cube.obj
+						//vertices.emplace_back((glm::vec3(vx, vy, vz) * 0.2f) + glm::vec3(0.0, 0.0, 0.0));
+
+						//plane.obj
+						//vertices.emplace_back((glm::vec3(vx, vy, vz) * 0.02f) + glm::vec3(0.0, 0.0, 0.0));
+
+						//xyzrgb_dragon.obj
+						vertices.emplace_back((glm::vec3(vx, vy, vz) * 0.01f * 0.5f) + glm::vec3(0.0, 0.0, 0.0));
+
+						
 
 					}
 					indexOffset += numFaceVertices;
@@ -111,9 +126,14 @@ public:
 		glm::vec3 v0v2 = v2 - v0;
 		N = glm::cross(v0v1, v0v2);
 
-		float NdotRayDirection = glm::dot(N, dir);
 
-		if (glm::dot(dir, N) > 0.0) N = -N;
+
+
+		float NdotRayDirection = glm::dot(N, dir);
+		
+		if (NdotRayDirection > 0.0) return false;
+
+		if (std::fabs(NdotRayDirection) < 1e-8) return false;
 
 
 		float d = glm::dot(-N, v0);
@@ -159,7 +179,6 @@ public:
 				if (t >= 0) {
 
 					glm::vec3 hit = incidentRay.orig + t * incidentRay.dir;
-
 
 
 					if (hit.z > closestZ) {

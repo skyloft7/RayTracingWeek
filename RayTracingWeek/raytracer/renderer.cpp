@@ -18,7 +18,9 @@ glm::vec3 renderer::linear_to_gamma(glm::vec3& input) {
 }
 
 rayresult renderer::trace_ray(ray& incidentRay, scene& scene, camera& camera) {
+	traceRayDepth++;
 
+	
 	
 
 
@@ -49,23 +51,30 @@ rayresult renderer::trace_ray(ray& incidentRay, scene& scene, camera& camera) {
 
 
 	if (closestEntity != nullptr) {
-		res.miss = false;
-
+		res.miss = false;		
+		
+		
+		
 		glm::vec3 childRayDir;
-		
 		res.color = closestEntity->get_mat()->color(incidentRay, *closestNormal, childRayDir);
+		
+		if (true || traceRayDepth <= 10) {
+			//std::cout << traceRayDepth << std::endl;
+
+			ray childRay(*closestHit * 1.1f, childRayDir);
+
+			rayresult childRayRes = trace_ray(childRay, scene, camera);
+
+			if (!childRayRes.miss) {
+				res.color = 0.3f * blend(childRay, res.color, childRayRes.color);
+				return res;
+			}
+			
+		}
+		
+		
 
 		
-		ray childRay(*closestHit * 1.01f, childRayDir);
-
-		rayresult childRayRes = trace_ray(childRay, scene, camera);
-
-		if (!childRayRes.miss) {
-			res.color = 0.3f * blend(childRay, res.color, childRayRes.color);
-			return res;
-		}
-
-
 		
 
 	
@@ -99,8 +108,10 @@ void renderer::render(camera& camera, scene& scene, std::ofstream& output) {
 		std::cout << "Scanlines Remaining: " << scanlinesRemaining << std::endl;
 
 
+
 		for (int i = 0; i < camera.screenWidth; i++) {
 
+			//if (i == 64 && j == 24) __debugbreak();
 
 			glm::vec3 color;
 
@@ -138,6 +149,7 @@ void renderer::render(camera& camera, scene& scene, std::ofstream& output) {
 			}
 #else 
 			ray ray(camera.pos, glm::normalize(camera.screenToWorld(i, j)));
+			traceRayDepth = 0;
 			rayresult rayResult = trace_ray(ray, scene, camera);
 			color = rayResult.color;
 #endif

@@ -120,6 +120,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glm-1.0.1-light\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -129,25 +130,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="raytracer\main.cpp" />
+    <ClCompile Include="raytracer\renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="camera.h" />
-    <ClInclude Include="entity.h" />
-    <ClInclude Include="hitresult.h" />
-    <ClInclude Include="materials\lambertian.h" />
-    <ClInclude Include="materials\material.h" />
-    <ClInclude Include="materials\metal.h" />
-    <ClInclude Include="mesh.h" />
-    <ClInclude Include="ray.h" />
-    <ClInclude Include="renderer.h" />
-    <ClInclude Include="scene.h" />
-    <ClInclude Include="sphere.h" />
-    <ClInclude Include="tiny_obj_loader.h" />
-    <ClInclude Include="triangle.h" />
-    <ClInclude Include="util.h" />
-    <ClInclude Include="vertex.h" />
+    <ClInclude Include="raytracer\camera.h" />
+    <ClInclude Include="raytracer\entity.h" />
+    <ClInclude Include="raytracer\hitresult.h" />
+    <ClInclude Include="raytracer\materials\lambertian.h" />
+    <ClInclude Include="raytracer\materials\material.h" />
+    <ClInclude Include="raytracer\materials\metal.h" />
+    <ClInclude Include="raytracer\mesh.h" />
+    <ClInclude Include="raytracer\ray.h" />
+    <ClInclude Include="raytracer\renderer.h" />
+    <ClInclude Include="raytracer\scene.h" />
+    <ClInclude Include="raytracer\sphere.h" />
+    <ClInclude Include="raytracer\tiny_obj_loader.h" />
+    <ClInclude Include="raytracer\triangle.h" />
+    <ClInclude Include="raytracer\util.h" />
+    <ClInclude Include="raytracer\vertex.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

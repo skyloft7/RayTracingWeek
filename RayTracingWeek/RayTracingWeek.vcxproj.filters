@@ -15,57 +15,57 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="raytracer\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderer.cpp">
+    <ClCompile Include="raytracer\renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ray.h">
+    <ClInclude Include="raytracer\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
+    <ClInclude Include="raytracer\entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sphere.h">
+    <ClInclude Include="raytracer\hitresult.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderer.h">
+    <ClInclude Include="raytracer\materials\lambertian.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="util.h">
+    <ClInclude Include="raytracer\materials\material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="materials\material.h">
+    <ClInclude Include="raytracer\materials\metal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="materials\metal.h">
+    <ClInclude Include="raytracer\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="materials\lambertian.h">
+    <ClInclude Include="raytracer\ray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="scene.h">
+    <ClInclude Include="raytracer\renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entity.h">
+    <ClInclude Include="raytracer\scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="hitresult.h">
+    <ClInclude Include="raytracer\sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="mesh.h">
+    <ClInclude Include="raytracer\tiny_obj_loader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tiny_obj_loader.h">
+    <ClInclude Include="raytracer\triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vertex.h">
+    <ClInclude Include="raytracer\util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="triangle.h">
+    <ClInclude Include="raytracer\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

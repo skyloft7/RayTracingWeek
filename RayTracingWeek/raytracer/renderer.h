@@ -11,7 +11,7 @@
 #include <random>
 
 struct rayresult {
-	bool miss;
+	bool miss = true;
 	glm::vec3 color;
 };
 
@@ -21,6 +21,7 @@ private:
 	rayresult trace_ray(ray& incidentRay, scene& scene, camera& camera);
 	glm::vec3 linear_to_gamma(glm::vec3& input);
 	double clamp(double input, double min, double max);
+	int traceRayDepth = 0;
 	
 public:
 	void render(camera& camera, scene& scene, std::ofstream& output);

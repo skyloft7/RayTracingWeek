@@ -3,7 +3,6 @@
 #include "../util.h"
 
 
-
 class metal : public material {
 public:
 	metal(glm::vec3 albedo) : material(albedo) {

@@ -8,7 +8,7 @@ public:
 	lambertian(glm::vec3 albedo) : material(albedo) {
 
 	}
-	
+
 	glm::vec3 color(ray& incidentRay, glm::vec3& normal, glm::vec3& childRayDir) {
 
 		normal += random_vec3();
@@ -17,8 +17,8 @@ public:
 		return albedo;
 	}
 
-	
-	
 
-	
+
+
+
 };
