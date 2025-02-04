@@ -68,5 +68,8 @@
     <ClInclude Include="raytracer\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="raytracer\raybatch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

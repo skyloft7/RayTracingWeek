@@ -7,6 +7,8 @@
 #include "scene.h"
 #include "entity.h"
 #include "hitresult.h"
+#include <thread>
+#include "raybatch.h"
 
 glm::vec3 renderer::linear_to_gamma(glm::vec3& input) {
 
@@ -18,11 +20,6 @@ glm::vec3 renderer::linear_to_gamma(glm::vec3& input) {
 }
 
 rayresult renderer::trace_ray(ray& incidentRay, scene& scene, camera& camera) {
-	traceRayDepth++;
-
-	
-	
-
 
 	float closestZ = -100;
 	entity* closestEntity = nullptr;
@@ -58,18 +55,13 @@ rayresult renderer::trace_ray(ray& incidentRay, scene& scene, camera& camera) {
 		glm::vec3 childRayDir;
 		res.color = closestEntity->get_mat()->color(incidentRay, *closestNormal, childRayDir);
 		
-		if (true || traceRayDepth <= 10) {
-			//std::cout << traceRayDepth << std::endl;
+		ray childRay(*closestHit * 1.1f, childRayDir);
 
-			ray childRay(*closestHit * 1.1f, childRayDir);
+		rayresult childRayRes = trace_ray(childRay, scene, camera);
 
-			rayresult childRayRes = trace_ray(childRay, scene, camera);
-
-			if (!childRayRes.miss) {
-				res.color = 0.3f * blend(childRay, res.color, childRayRes.color);
-				return res;
-			}
-			
+		if (!childRayRes.miss) {
+			res.color = 0.3f * blend(childRay, res.color, childRayRes.color);
+			return res;
 		}
 		
 		
@@ -99,69 +91,83 @@ double renderer::clamp(double input, double min, double max) {
 
 
 void renderer::render(camera& camera, scene& scene, std::ofstream& output) {
-
 	
+
+	int numThreads = 6;
+
+
+	int threadBatchHeight = camera.screenHeight / numThreads;
 	
-	for (int j = 0; j < camera.screenHeight; j++) {
-		int scanlinesRemaining = camera.screenHeight - j;
+	for (int i = 0; i < numThreads; i++) {
 
-		std::cout << "Scanlines Remaining: " << scanlinesRemaining << std::endl;
+		raybatch* r = new raybatch();
+		raybatches.emplace_back(r);
+
+		
 
 
+		r->height = camera.screenHeight / numThreads;
+		r->index = i;
 
-		for (int i = 0; i < camera.screenWidth; i++) {
 
-			//if (i == 64 && j == 24) __debugbreak();
+		r->thread = std::thread([r, &camera, &scene, this]() {
+			
+			int scanlines = r->height * (r->index + 1);
 
-			glm::vec3 color;
+			for (int j = r->height * r->index; j < scanlines; j++) {
 
-#ifdef MULTISAMPLE_ON 
+				int scanlinesRemaining = j - scanlines;
 
-			if (i != 0 && i != camera.screenWidth - 1 && j != 0 && j != camera.screenHeight - 1) {
-				glm::vec2 pixels[9] = {
-						glm::vec2(i, j),
-						glm::vec2(i - 1, j),
-						glm::vec2(i + 1, j),
-						glm::vec2(i, j - 1),
-						glm::vec2(i, j + 1),
-						glm::vec2(i - 1, j - 1),
-						glm::vec2(i + 1, j + 1),
-						glm::vec2(i + 1, j - 1),
-						glm::vec2(i - 1, j + 1)
-				};
 
-				for (glm::vec2 pixel : pixels) {
-					ray ray(camera.pos, glm::normalize(camera.screenToWorld(pixel.x, pixel.y)));
+				for (int i = 0; i < camera.screenWidth; i++) { 
+
+					
+					
+					
+					glm::vec3* color = new glm::vec3();
+
+					ray ray(camera.pos, glm::normalize(camera.screenToWorld(i, j)));
 					rayresult rayResult = trace_ray(ray, scene, camera);
 
-					color += rayResult.color;
+					color->r = clamp(rayResult.color.r, 0.0, 1.0);
+					color->g = clamp(rayResult.color.g, 0.0, 1.0);
+					color->b = clamp(rayResult.color.b, 0.0, 1.0);
+
+					
+					r->pixels.emplace_back(color);
+					
+					
+
+					
 				}
 
-				color /= 9;
-				
+				std::cout << r->index << "-" << scanlinesRemaining << std::endl;
 
 			}
+			
+			
 
-			else {
-				ray ray(camera.pos, glm::normalize(camera.screenToWorld(i, j)));
-				rayresult rayResult = trace_ray(ray, scene, camera);
-				color = rayResult.color;
-			}
-#else 
-			ray ray(camera.pos, glm::normalize(camera.screenToWorld(i, j)));
-			traceRayDepth = 0;
-			rayresult rayResult = trace_ray(ray, scene, camera);
-			color = rayResult.color;
-#endif
 
-			color.r = clamp(color.r, 0.0, 1.0);
-			color.g = clamp(color.g, 0.0, 1.0);
-			color.b = clamp(color.b, 0.0, 1.0);
+		});
 
-			output << (int)(color.r * 255) << ' ' << (int)(color.g * 255) << ' ' << (int)(color.b * 255) << '\n';
-
-		}
+		
 	}
+
+	for (raybatch* r : raybatches) {
+		r->thread.join();
+		std::cout << "raybatch [" << r->index << "] has finished" << std::endl;
+	}
+	
+
+	for (auto& raybatch : raybatches) {
+		std::cout << raybatch->index << " writing " << raybatch->pixels.size() << std::endl;
+
+		for (glm::vec3* color : raybatch->pixels) {
+			output << (int)(color->r * 255) << ' ' << (int)(color->g * 255) << ' ' << (int)(color->b * 255) << '\n';
+		}
+
+	}
+
 
 	output.close();
 

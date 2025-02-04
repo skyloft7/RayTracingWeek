@@ -9,6 +9,7 @@
 #include "scene.h"
 #include <vector>
 #include <random>
+#include "raybatch.h"
 
 struct rayresult {
 	bool miss = true;
@@ -16,12 +17,16 @@ struct rayresult {
 };
 
 
+
+
 class renderer {
+
 private:
+	std::vector<raybatch*> raybatches;
 	rayresult trace_ray(ray& incidentRay, scene& scene, camera& camera);
 	glm::vec3 linear_to_gamma(glm::vec3& input);
 	double clamp(double input, double min, double max);
-	int traceRayDepth = 0;
+
 	
 public:
 	void render(camera& camera, scene& scene, std::ofstream& output);

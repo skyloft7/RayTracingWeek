@@ -120,7 +120,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\Dependencies\glm-1.0.1-light\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -142,6 +142,7 @@
     <ClInclude Include="raytracer\materials\metal.h" />
     <ClInclude Include="raytracer\mesh.h" />
     <ClInclude Include="raytracer\ray.h" />
+    <ClInclude Include="raytracer\raybatch.h" />
     <ClInclude Include="raytracer\renderer.h" />
     <ClInclude Include="raytracer\scene.h" />
     <ClInclude Include="raytracer\sphere.h" />
